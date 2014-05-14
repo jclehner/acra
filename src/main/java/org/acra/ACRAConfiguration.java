@@ -21,6 +21,9 @@ import static org.acra.ACRAConstants.DEFAULT_CONNECTION_TIMEOUT;
 import static org.acra.ACRAConstants.DEFAULT_DELETE_OLD_UNSENT_REPORTS_ON_APPLICATION_START;
 import static org.acra.ACRAConstants.DEFAULT_DELETE_UNAPPROVED_REPORTS_ON_APPLICATION_START;
 import static org.acra.ACRAConstants.DEFAULT_DIALOG_ICON;
+import static org.acra.ACRAConstants.DEFAULT_DIALOG_CANCEL_BUTTON_TEXT;
+import static org.acra.ACRAConstants.DEFAULT_DIALOG_REPORT_BUTTON_TEXT;
+import static org.acra.ACRAConstants.DEFAULT_DIALOG_SWITCH_BUTTON_POSITIONS;
 import static org.acra.ACRAConstants.DEFAULT_DISABLE_SSL_CERT_VALIDATION;
 import static org.acra.ACRAConstants.DEFAULT_DROPBOX_COLLECTION_MINUTES;
 import static org.acra.ACRAConstants.DEFAULT_FORCE_CLOSE_DIALOG_AFTER_TOAST;
@@ -81,6 +84,9 @@ public class ACRAConfiguration implements ReportsCrashes {
     private Integer mResDialogOkToast = null;
     private Integer mResDialogText = null;
     private Integer mResDialogTitle = null;
+    private Integer mResDialogReportBtnText = null;
+    private Integer mResDialogCancelBtnText = null;
+    private Boolean mDialogSwitchBtnPositions = null;
     private Integer mResNotifIcon = null;
     private Integer mResNotifText = null;
     private Integer mResNotifTickerText = null;
@@ -354,6 +360,40 @@ public class ACRAConfiguration implements ReportsCrashes {
      */
     public void setResDialogTitle(int resId) {
         mResDialogTitle = resId;
+    }
+
+    /**
+     * Use this method if the id you wanted to give to
+     * {@link ReportsCrashes#resDialogReportButtonText()} comes from an Android Library
+     * Project.
+     *
+     * @param resId
+     *            The resource id, see {@link ReportsCrashes#resDialogReportButtonText()}
+     */
+    public void setResDialogReportButtonText(int resId) {
+        mResDialogReportBtnText = resId;
+    }
+
+    /**
+     * Use this method if the id you wanted to give to
+     * {@link ReportsCrashes#resDialogCancelButtonText()} comes from an Android Library
+     * Project.
+     *
+     * @param resId
+     *            The resource id, see {@link ReportsCrashes#resDialogCancelButtonText()}
+     */
+    public void setResDialogCancelButtonText(int resId) {
+        mResDialogCancelBtnText = resId;
+    }
+
+    /**
+     * Use this method to switch the position of the "report" and "cancel" buttons.
+     *
+     * @param switchButtons
+     *            See {@link ReportsCrashes#switchDialogButtonPositions}
+     */
+    public void setSwitchDialogButtonPositions(Boolean switchPositions) {
+        mDialogSwitchBtnPositions = switchPositions;
     }
 
     /**
@@ -847,6 +887,45 @@ public class ACRAConfiguration implements ReportsCrashes {
         }
 
         return DEFAULT_RES_VALUE;
+    }
+
+    @Override
+    public int resDialogReportButtonText() {
+        if (mResDialogReportBtnText != null) {
+            return mResDialogReportBtnText;
+        }
+
+        if (mReportsCrashes != null) {
+            return mReportsCrashes.resDialogReportButtonText();
+        }
+
+        return DEFAULT_DIALOG_REPORT_BUTTON_TEXT;
+    }
+
+    @Override
+    public int resDialogCancelButtonText() {
+        if (mResDialogCancelBtnText != null) {
+            return mResDialogCancelBtnText;
+        }
+
+        if (mReportsCrashes != null) {
+            return mReportsCrashes.resDialogCancelButtonText();
+        }
+
+        return DEFAULT_DIALOG_CANCEL_BUTTON_TEXT;
+    }
+
+    @Override
+    public boolean switchDialogButtonPositions() {
+        if (mDialogSwitchBtnPositions != null) {
+            return mDialogSwitchBtnPositions;
+        }
+
+        if (mReportsCrashes != null) {
+            return mReportsCrashes.switchDialogButtonPositions();
+        }
+
+        return DEFAULT_DIALOG_SWITCH_BUTTON_POSITIONS;
     }
 
     @Override

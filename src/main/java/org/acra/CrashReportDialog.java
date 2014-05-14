@@ -38,6 +38,7 @@ public class CrashReportDialog extends Activity implements DialogInterface.OnCli
     private SharedPreferences prefs;
     private EditText userComment;
     private EditText userEmail;
+    private int reportBtn;
     String mReportFileName;
     AlertDialog mDialog;
 
@@ -67,8 +68,16 @@ public class CrashReportDialog extends Activity implements DialogInterface.OnCli
             dialogBuilder.setIcon(resourceId);
         }
         dialogBuilder.setView(buildCustomView(savedInstanceState));
-        dialogBuilder.setPositiveButton(android.R.string.ok, CrashReportDialog.this);
-        dialogBuilder.setNegativeButton(android.R.string.cancel, CrashReportDialog.this);
+        if (!ACRA.getConfig().switchDialogButtonPositions()) {
+            reportBtn = DialogInterface.BUTTON_POSITIVE;
+            dialogBuilder.setPositiveButton(ACRA.getConfig().resDialogReportButtonText(), CrashReportDialog.this);
+            dialogBuilder.setNegativeButton(ACRA.getConfig().resDialogCancelButtonText(), CrashReportDialog.this);
+        } else {
+            reportBtn = DialogInterface.BUTTON_NEGATIVE;
+            dialogBuilder.setNegativeButton(ACRA.getConfig().resDialogReportButtonText(), CrashReportDialog.this);
+            dialogBuilder.setPositiveButton(ACRA.getConfig().resDialogCancelButtonText(), CrashReportDialog.this);
+        }
+
         cancelNotification();
         mDialog = dialogBuilder.create();
         mDialog.setCanceledOnTouchOutside(false);
@@ -158,7 +167,7 @@ public class CrashReportDialog extends Activity implements DialogInterface.OnCli
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE)
+        if (which == reportBtn)
             sendCrash();
         else {
             cancelReports();
