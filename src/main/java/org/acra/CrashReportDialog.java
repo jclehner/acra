@@ -67,15 +67,21 @@ public class CrashReportDialog extends Activity implements DialogInterface.OnCli
         if(resourceId != 0) {
             dialogBuilder.setIcon(resourceId);
         }
-        dialogBuilder.setView(buildCustomView(savedInstanceState));
+
+        if (needsCustomView()) {
+            dialogBuilder.setView(buildCustomView(savedInstanceState));
+        } else {
+            dialogBuilder.setMessage(ACRA.getConfig().resDialogText());
+        }
+
         if (!ACRA.getConfig().switchDialogButtonPositions()) {
             reportBtn = DialogInterface.BUTTON_POSITIVE;
             dialogBuilder.setPositiveButton(ACRA.getConfig().resDialogReportButtonText(), CrashReportDialog.this);
             dialogBuilder.setNegativeButton(ACRA.getConfig().resDialogCancelButtonText(), CrashReportDialog.this);
         } else {
-            reportBtn = DialogInterface.BUTTON_NEUTRAL;
-            dialogBuilder.setNeutralButton(ACRA.getConfig().resDialogReportButtonText(), CrashReportDialog.this);
-            dialogBuilder.setNegativeButton(ACRA.getConfig().resDialogCancelButtonText(), CrashReportDialog.this);
+            reportBtn = DialogInterface.BUTTON_NEGATIVE;
+            dialogBuilder.setNegativeButton(ACRA.getConfig().resDialogReportButtonText(), CrashReportDialog.this);
+            dialogBuilder.setPositiveButton(ACRA.getConfig().resDialogCancelButtonText(), CrashReportDialog.this);
         }
 
         cancelNotification();
@@ -83,6 +89,11 @@ public class CrashReportDialog extends Activity implements DialogInterface.OnCli
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.setOnDismissListener(this);
         mDialog.show();
+    }
+
+    private boolean needsCustomView() {
+        return ACRA.getConfig().resDialogCommentPrompt() != 0
+            || ACRA.getConfig().resDialogEmailPrompt() != 0;
     }
 
     private View buildCustomView(Bundle savedInstanceState) {
